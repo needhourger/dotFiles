@@ -1,0 +1,234 @@
+(defvar HEIGHT 36)
+(defwindow bar
+  :class "bar"
+  :monitor 0
+  :geometry (geometry :x "8px" :y "8px" :width "99%" :height "3%" :anchor "top center")
+  :stacking "fg"
+  :exclusive true
+  :focusable false
+  (barcontent)
+)
+
+(defwidget barcontent []
+  (centerbox :orientation "h"
+    (workspaces)
+    (time)
+    (status)
+  )
+)
+
+(deflisten workspaces :initial "[]" "bash ~/.config/eww/scripts/get-workspaces")
+(deflisten current_workspace :initial "1" "bash ~/.config/eww/scripts/get-active-workspace")
+(defwidget workspaces []
+  (eventbox :onscroll "bash ~/.config/eww/scripts/change-active-workspace {} ${current_workspace}" :class "workspaces-widget"
+    (box :space-evenly false :spacing 10
+      (box :orientation "h" :space-evenly false :halign "start" :class "workspaces"
+        (for workspace in workspaces
+          (eventbox :onclick "hyprctl dispatch workspace ${workspace.id}"
+            (revealer :transition "crossfade" :reveal {workspace.windows > 0 || workspace.id == current_workspace }
+              (box
+                :visible {workspace.windows > 0 || workspace.id == current_workspace }
+                :class "workspace-entry ${workspace.id == current_workspace ? "current" : ""} ${workspace.windows > 0 ? "occupied" : "empty"}"  
+                :tooltip "Workspace - ${workspace.id}"
+                (label :text "${workspace.id % 10}")
+              )
+            )
+          )
+        )
+      )
+      (window_title)
+    )
+  )
+)
+
+
+
+(deflisten window_name :initial "..." "bash ~/.config/eww/scripts/get-window-title")
+(defwidget window_title []
+  (box :space-evenly true :class "window-title" :tooltip window_name
+    (label :limit-width 60 :show_truncated true :text window_name :visible {window_name != "null"})
+  )
+)
+
+(defpoll timenow :interval "1s" :initial "initial-value" `date "+%A  %H:%M"`)
+(defpoll datenow :interval "1m" :inital "" `date "+%Y-%m-%d"`)
+(defvar date-show false)
+(defwidget time []
+  (eventbox 
+    :onhover "eww update date-show=true"
+    :onhoverlost "eww update date-show=false"
+    :onclick {calendar-show ? "eww close calendar-w && eww update calendar-show=false" : "eww open calendar-w && eww update calendar-show=true"}
+    (box :space-evenly false :halign "center" :class "time" :spacing 10
+      (label :text timenow)
+      (revealer :transition "slideright" :reveal date-show
+        (label :text datenow)
+      )
+    )
+  )
+)
+
+(defpoll isAC :interval "1s" :initial "" `cat /sys/class/power_supply/ADP1/online`)
+(defwidget status []
+  (box :space-evenly false :halign "end" :spacing 10
+    (backlight)
+    (volume)
+    (box :space-evenly false :halign "end" :spacing 10 :class "status"
+      (overlay :tooltip "CPU:${round(EWW_CPU.avg,2)}%"
+        (circular-progress :start-at 18 :width {HEIGHT} :value {EWW_CPU.avg} :thickness 5 :class "cpu")
+        (label :text "󰻠" :class "icon")
+      )
+      (overlay :tooltip "Mem:${round(EWW_RAM.used_mem_perc,2)}%"
+        (circular-progress :start-at 18 :width {HEIGHT} :value {EWW_RAM.used_mem_perc} :thickness 5 :class "memory")
+        (label :text "󰍛" :class "icon")
+      )
+      (overlay
+        (circular-progress :start-at 0 :width {HEIGHT} 
+          :value {EWW_BATTERY.total_avg} 
+          :thickness 5 :tooltip "Battery"
+          :class "battery")
+        (label :text "󱐋" :class "ac" :tooltip "Battery: ${EWW_BATTERY.total_avg}%" :height {HEIGHT} :visible {isAC == 1})
+        (label :text {EWW_BATTERY.total_avg} :visible {isAC == 0} :class "level-text")
+      )
+    )
+    (wifi)
+    (power)
+  )
+)
+
+(defpoll volume_percent :interval "3s" "amixer sget Master | grep 'Mono:' | awk -F'[][]' '{ print $2 }' | tr -d '%'")
+(defpoll volume_on :interval "3s" "amixer sget Master | grep 'Mono:' | awk '{print $6}' | tr -d '[]'")
+(defvar show_level false)
+(defwidget volume []
+  (eventbox 
+    :onmiddleclick {volume_on == 'on' ? "amixer sset Master mute" : "amixer sset Master unmute"}
+    :onhover "eww update show_level=true"
+    :onhoverlost "eww update show_level=false"
+    (box :class "volume" :space-evenly false :spacing 0 
+      (overlay
+        (circular-progress :start-at 0 :width HEIGHT :value {volume_on == "off" || volume_percent == '' ? 0 : volume_percent} :thickness 3)
+        (label :text {volume_on == 'on'? "󰕾" : "󰖁"})
+      )
+      (revealer :transition "slideright" :reveal show_level
+        (box :space-evenly true :class "slider-box"
+          (scale :min 0 :max 101 :value {volume_percent == '' ? 0 : volume_percent} :onchange "amixer sset Master {}%" :tooltip "Volume:${volume_percent}%")
+        )
+      )
+    )
+  )
+)
+
+(defpoll current_backlight :initial 0 :interval "3s" "xbacklight -get")
+(defvar show_light false)
+(defwidget backlight []
+  (eventbox
+    :onhover "eww update show_light=true"
+    :onhoverlost "eww update show_light=false"
+    (box :space-evenly false :spacing 0 :class "backlight" :width HEIGHT
+      (overlay
+        (circular-progress :width HEIGHT :start-at 0 :value current_backlight :thickness 3)
+        (label :text "")
+      )
+      (revealer :transition "slideright" :reveal show_light
+        (box :space-evenly true :class "slider-box"
+          (scale :min 0 :max 101 :value current_backlight :onchange "xbacklight -set {}" :tooltip "Light:${current_backlight}%")
+        )
+      )
+    )
+  )
+)
+
+(defvar show-power false)
+(defwidget power []
+  (box :space-evenly false :halign "center"
+    (button :class "power-btn"
+      :onclick {show-power ? "eww close power-w && eww update show-power=false" : "eww open power-w && eww update show-power=true"}
+      (label :text "") 
+    )
+  )
+)
+
+(defpoll wifi-color :interval "1s" "./scripts/wifi --COL")
+(defpoll wifi-icon  :interval "1s" "./scripts/wifi --ICON")
+(defpoll wifi-essid :interval "5s" "./scripts/wifi --ESSID")
+(defvar essid-show false)
+(defwidget wifi []
+  (eventbox
+    :onhover "eww update essid-show=true"
+    :onhoverlost "eww update essid-show=false"
+    (box :class "wifi" :style "color: ${wifi-color}" :space-evenly false :spacing 5
+      (label :text wifi-icon :tooltip wifi-essid :class "icon")
+      (box :space-evenlt false :orientation "v" :spacing 0
+        (label :text " ${round(EWW_NET.wlp0s20f3.NET_UP / 1024,2)}KB/s" :class "net up" :width 40 :hexpand false)
+        (label :text " ${round(EWW_NET.wlp0s20f3.NET_DOWN / 1024,2)}KB/s" :class "net down" :width 40 :hexpand false)
+      )
+    )
+  )
+)
+
+; Power window
+(defwindow power-w 
+  :class "power-w"
+  :monitor 0
+  :geometry (geometry :y "8px" :x "12px" :anchor "top right")
+  :stacking "fg"
+  :exclusive true
+  :focusable false
+  (power-container)
+)
+
+(defwidget power-container []
+  (eventbox :onhoverlost "eww close power-w && eww update show-power=false"
+    (revealer :transition "slidedown" :reveal show-power
+      (box :space-evenly true :orientation "v" :class "power-container" :spacing 0
+        (button :onclick "systemctl poweroff" :class "btn" (label :text "⏼" :tooltip "Poweroff"))
+        (button :onclick "systemctl reboot"  :class "btn" (label :text "󱍸" :tooltip "Reboot"))
+        (button :onclick "systemctl suspend"  :class "btn" (label :text "󰒲" :tooltip "Suspend"))
+        (button :onclick "systemctl hibernate"  :class "btn"(label :text "󰙧" :tooltip "Hibernate"))
+        (button :onclick "loginctl terminate-user $USER" :class "btn"(label :text "󰿢" :tooltip "Lagout"))
+      )
+    )
+  )
+)
+
+
+; Calendar window
+(defvar calendar-show false)
+(defwindow calendar-w
+  :monitor 0
+  :geometry (geometry :y "8px" :width "20%" :height "12%" :anchor "top center")
+  :stacking "fg"
+  :focusable false
+  :exclusive false
+  (eventbox
+    :onhoverlost "eww update calendar-show=false && eww close calendar-w"
+    (revealer :transition "slidedown" :reveal calendar-show :duration 10
+      (box :space-evently true :orientation "v" :class "calendar"
+        (calendar)
+      )
+    )
+  )
+ 
+)
+
+; Test Window
+; (defvar testv 100)
+; (defwindow test 
+;   :class "test"
+;   :monitor 0
+;   :geometry (geometry :y "8px" :x "8px" :width "10%" :height "10%" :anchor "top center")
+;   :stacking "fg"
+;   :exclusive false
+;   :focusable false
+;   (box :space-evently true :spacing 0 :orientation "v" :class "metric"
+;     (scale
+;       :flipped false 
+;       :marks "###" 
+;       :round-digits 0 
+;       :min 0 
+;       ; :draw-value true
+;       :max 101 :orientation "h" :value testv
+;       :onchange "eww update testv={}")
+;     (progress :value testv :class "")
+;     (label :text testv)
+;   )
+; )

@@ -1,0 +1,261 @@
+* {
+  all: unset;
+  font-family: DaddyTimeMono Nerd Font Mono;
+}
+
+tooltip.background {
+  background-color: rgba($color: #000, $alpha: 0.8);
+  font-size: 1.5rem;
+  font-weight: 800;
+  border-radius: 1rem;
+}
+
+tooltip label {
+  margin: 0.5rem;
+}
+
+.bar {
+  background-color: rgba($color: #fff, $alpha: 0);
+  border-radius: 1rem;
+}
+
+.workspaces {
+  padding: 0.1rem 0.5rem;
+  border-radius: 50px;
+  background-color: rgba($color: #000, $alpha: 0.66);
+}
+
+.workspaces-widget {
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 900;
+  .workspace-entry {
+    background-color: rgba($color: #333, $alpha: 0.66);
+    border-radius: 100%;
+    padding: 0rem 1rem;
+    margin: 0.6rem 0.3rem;
+  }
+
+  .current {
+    color: #111;
+    background-color: #f596aa;
+  }
+
+  .window-title {
+    font-size: 1.4rem;
+    color: #e2943b;
+    padding: 0 1.2rem;
+    border-radius: 5rem;
+    background-color: rgba($color: #000, $alpha: 0.66);
+  }
+}
+
+.status {
+  padding: 0 1rem;
+  border-radius: 5rem;
+  background-color: rgba($color: #000, $alpha: 0.66);
+
+  .cpu {
+    color: rgba($color: #fffffb, $alpha: 1);
+  }
+
+  .memory {
+    color: rgba($color: #b481bb, $alpha: 1);
+  }
+  .icon {
+    font-size: 3rem;
+  }
+
+  .battery {
+    color: rgba($color: #1b813e, $alpha: 1);
+  }
+
+  .medium {
+    color: rgba($color: #7ba23f, $alpha: 1);
+  }
+
+  .low {
+    color: rgba($color: #ddd23b, $alpha: 1);
+  }
+
+  .warn {
+    color: rgba($color: #f05e1c, $alpha: 1);
+  }
+
+  .charging {
+    color: rgba($color: #2ea9df, $alpha: 1);
+  }
+
+  .ac {
+    color: #ddd22b;
+    font-size: 3rem;
+    font-weight: 900;
+    padding: 0;
+    margin: 0;
+  }
+
+  .level-text {
+    font-weight: 800;
+    font-size: large;
+  }
+}
+
+.wifi {
+  padding: 0 1.2rem 0 0;
+  border-radius: 5rem;
+  background-color: rgba($color: #000, $alpha: 0.66);
+  .icon {
+    background-color: rgba($color: #000000, $alpha: 0.85);
+    border-radius: 5rem;
+    padding: 0 1rem;
+    font-size: 3rem;
+  }
+  
+  .net {
+    font-size: 1.2rem;
+    font-weight: 900;
+  }
+  .down {
+    color: whitesmoke;
+  }
+  .up {
+    color:#b481bb
+  }
+}
+
+.volume {
+  color: #2ea9df;
+  font-size: 3em;
+  font-weight: 800;
+  background-color: rgba($color: #000, $alpha: 0.66);
+  border-radius: 5rem;
+  padding: 0 0.8rem;
+
+  .volume-text {
+    font-size: 2rem;
+  }
+
+  .slider-box scale trough highlight {
+    all: unset;
+    background-color: #2ea9df;
+    border-radius: 10px;
+  }
+
+  .slider-box scale trough {
+    all: unset;
+    background-color: rgba($color: #2ea9df, $alpha: 0.3);
+    border-radius: 50px;
+    min-height: 10px;
+    min-width: 5rem;
+    margin-left: 0.5rem;
+  }
+}
+
+.backlight {
+  color: #f7d94c;
+  font-size: 1.5rem;
+  font-weight: 800;
+  background-color: rgba($color: #000, $alpha: 0.66);
+  border-radius: 5rem;
+  padding: 0 0.8rem;
+
+  .backlight-text {
+    font-size: 2rem;
+  }
+
+  .slider-box scale trough highlight {
+    all: unset;
+    background-color: #f7d94c;
+    border-radius: 10px;
+  }
+
+  .slider-box scale trough {
+    all: unset;
+    background-color: rgba($color: #f7d94c, $alpha: 0.3);
+    border-radius: 50px;
+    min-height: 10px;
+    min-width: 5rem;
+    margin-left: 0.5rem;
+  }
+}
+
+.time {
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.5rem;
+  padding: 0 2rem;
+  border-radius: 5rem;
+  background-color: rgba($color: #000, $alpha: 0.66);
+}
+
+.power-btn {
+  color: #cb1b45;
+  border-radius: 5rem;
+  padding: 0 1.1rem;
+  background-color: rgba($color: #000, $alpha: 1);
+  font-size: 3rem;
+  font-weight: 900;
+
+}
+
+.power-btn:hover {
+  background-color: #e2943b;
+}
+
+
+.power-w {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 700;
+  background-color: rgba($color: #000000, $alpha: 0.9);
+  border-radius: 5rem;
+
+  .btn {
+    padding: 0.5 1rem;
+    font-size: 3rem;
+  }
+
+  .btn:hover {
+    background-color: #2ea9df;
+    border-radius: 5rem;
+  }
+}
+
+.calendar {
+  background-color: rgba($color: #000000, $alpha: 0.8);
+  border-radius: 1rem;
+  padding: 1rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+
+  calendar:selected {
+    color: #2ea9df;
+  }
+
+  calendar.header {
+    color: #b481bb;
+    font-weight: 800;
+    font-size: 2rem;
+  }
+
+  calendar.button {
+    color: #b481bb;
+  }
+
+  calendar.highlight {
+    color: #2ea9df;
+    font-weight: 900;
+    font-size: 2rem;
+  }
+
+  calendar:indeterminate {
+    color: rgba($color: #fff, $alpha: 0.3);
+  }
+}
+
+.test {
+  color: #fff;
+  font-size: 2rem;
+  background-color: rgba($color: #000000, $alpha: 0.66);
+  border-radius: 1rem;
+}
