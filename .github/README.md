@@ -1,4 +1,17 @@
 # dotFiles
 My Linux dot files ~
 
-## Screen shot
+
+## Screenshots
+![](./images/screen.png)
+
+
+## Detail
+* Archlinux
+* Wayland
+* Hyprland
+  * Hyprpaper
+* SDDM
+* Kitty
+* Swaylock
+* EWW
