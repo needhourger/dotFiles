@@ -1,0 +1,15 @@
+/*
+!/.gitignore
+!/.github/
+
+!/.config/
+/.config/*
+!/.config/eww/
+!/.config/hypr/
+!/.config/swaylock/
+!/.config/kitty/
+
+!/.condarc
+!/.zshrc
+!/.pip/
+
