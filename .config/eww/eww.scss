@@ -35,6 +35,9 @@ tooltip label {
     padding: 0rem 1rem;
     margin: 0.6rem 0.3rem;
   }
+  .empty {
+    color: rgba($color: #fff, $alpha: 0.3);
+  }
 
   .current {
     color: #111;
