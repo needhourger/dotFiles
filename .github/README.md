@@ -1,2 +1,4 @@
-# dotFile
-My Linux configure file ~
+# dotFiles
+My Linux dot files ~
+
+## Screen shot
