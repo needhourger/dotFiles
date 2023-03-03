@@ -67,7 +67,6 @@
   )
 )
 
-(defpoll isAC :interval "1s" :initial "" `cat /sys/class/power_supply/ADP1/online`)
 (defwidget status []
   (box :space-evenly false :halign "end" :spacing 10
     (backlight)
@@ -86,8 +85,8 @@
           :value {EWW_BATTERY.total_avg} 
           :thickness 5 :tooltip "Battery"
           :class "battery")
-        (label :text "󱐋" :class "ac" :tooltip "Battery: ${EWW_BATTERY.total_avg}%" :height {HEIGHT} :visible {isAC == 1})
-        (label :text {round(EWW_BATTERY.total_avg,0)} :visible {isAC == 0} :class "level-text")
+        (label :text "󱐋" :class "ac" :tooltip "Battery: ${EWW_BATTERY.total_avg}%" :height {HEIGHT} :visible {EWW_BATTERY.BAT1.status != "Discharging"})
+        (label :text {round(EWW_BATTERY.total_avg,0)} :visible {EWW_BATTERY.BAT1.status == "Discharging"} :class "level-text")
       )
     )
     (wifi)
