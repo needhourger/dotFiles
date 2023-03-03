@@ -87,7 +87,7 @@
           :thickness 5 :tooltip "Battery"
           :class "battery")
         (label :text "󱐋" :class "ac" :tooltip "Battery: ${EWW_BATTERY.total_avg}%" :height {HEIGHT} :visible {isAC == 1})
-        (label :text {EWW_BATTERY.total_avg} :visible {isAC == 0} :class "level-text")
+        (label :text {round(EWW_BATTERY.total_avg,0)} :visible {isAC == 0} :class "level-text")
       )
     )
     (wifi)
