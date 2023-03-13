@@ -156,7 +156,7 @@
     :onhoverlost "eww update essid-show=false"
     (box :class "wifi" :style "color: ${wifi-color}" :space-evenly false :spacing 5
       (label :text wifi-icon :tooltip wifi-essid :class "icon")
-      (box :space-evenlt false :orientation "v" :spacing 0
+      (box :space-evenly false :orientation "v" :spacing 0
         (label :text " ${round(EWW_NET.wlp0s20f3.NET_UP / 1024,2)}KB/s" :class "net up" :width 40 :hexpand false)
         (label :text " ${round(EWW_NET.wlp0s20f3.NET_DOWN / 1024,2)}KB/s" :class "net down" :width 40 :hexpand false)
       )

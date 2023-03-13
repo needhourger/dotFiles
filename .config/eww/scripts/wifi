@@ -1,6 +1,6 @@
 #!/bin/bash
 
-status=$(nmcli g | grep -oE "disconnected")
+status=$(nmcli n connectivity | grep -oE "none")
 essid=$(nmcli c | grep wlp0s20f3 | awk '{print ($1)}')
 
 if [ $status ] ; then
